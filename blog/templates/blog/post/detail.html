@@ -1,12 +1,29 @@
-{% extends 'blog/base.html'%}
-{%block title%}{{blog.title}}{% endblock%}
+{% extends 'blog/base.html' %}
 
-{% block content%}
-<div class="container">
-    <h2>{{post.title}}</h2>
-    <p>{{post.desc}}</p>
-    <span>
-        <h6>{{post.author}}</h6>
-    </span>
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary mb-3">
+        ← Back to Posts
+    </a>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title">{{ post.title }}</h1>
+
+            <p class="text-muted mb-4">
+                <small>
+                    Published {{ post.publish|date:"M d, Y" }}
+                    by {{ post.author }}
+                </small>
+            </p>
+
+            <div class="content">
+                {{ post.desc|linebreaks }}
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock%}
+{% endblock %}

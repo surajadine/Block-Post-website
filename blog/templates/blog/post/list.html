@@ -1,23 +1,38 @@
 {% extends 'blog/base.html' %}
 
-{% block title%}My Blog{% endblock%}
+{% block title %}My Blog{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Latest Posts</h1>
 
-<div class="row">
-    {% for post in posts %}
-    <div class="col-lg-3">
-        <div class="card">
-            <h2>{{post.title}}</h2>
-            <p>Published {{post.publish}} by {{post.author}}</p>
-            {{post.desc | truncatewords:20 | linebreaks}}
-            <a href="{{post.get_absolute_url}} ">
-                more details
-                {{post.title | truncatewords:5}}
-            </a>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">{{ post.title }}</h4>
+
+                    <p class="text-muted mb-2">
+                        <small>
+                            Published {{ post.publish|date:"M d, Y" }}
+                            by {{ post.author }}
+                        </small>
+                    </p>
+
+                    <p class="card-text">
+                        {{ post.desc|truncatewords:20|linebreaks }}
+                    </p>
+
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary btn-sm">
+                        Read More →
+                    </a>
+                </div>
+            </div>
         </div>
+        {% empty %}
+        <p class="text-center">No posts available.</p>
+        {% endfor %}
     </div>
-    {% endfor %}
-
 </div>
 {% endblock %}

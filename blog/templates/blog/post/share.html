@@ -1,0 +1,38 @@
+<!-- blog/post/share.html -->
+{% extends "blog/base.html" %}
+
+{% block title %}Share Post{% endblock %}
+
+{% block content %}
+{% if sent %}
+<div class="container mt-5">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">E-mail successfully sent!</h4>
+        <p>"{{ post.title }}" was successfully sent to {{ form.cleaned_data.to }}.</p>
+    </div>
+</div>
+{% else %}
+<div class="container mt-5">
+    <h1 class="mb-4">Share "{{ post.title }}" by e-mail</h1>
+
+    <form method="post" class="border p-4 rounded shadow-sm bg-light">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Send e-mail</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -3,31 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Blog{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %}</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Global Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* NAVBAR ANIMATIONS */
+        .navbar-brand {
+            transition: 0.3s;
+        }
+
+        .navbar-brand:hover {
+            color: #0d6efd !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #0d6efd !important;
+            transform: translateX(3px);
+        }
+
+        /* FOOTER TEXT */
+        footer p {
+            font-size: 0.9rem;
+        }
+
+        /* PAGE SPACING */
+        .main-container {
+            min-height: 70vh;
+            padding-top: 2rem;
+        }
+
+        /* Offcanvas header color */
+        .offcanvas-title {
+            color: #0d6efd;
+        }
+
+        .comment-card {
+            transition: 0.2s;
+        }
+
+        .comment-card:hover {
+            transform: translateY(-3px);
+            background-color: #f1f5ff;
+            border-color: #0d6efd56;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'blog:post_list' %}">My Blog</a>
+
+            <a class="navbar-brand fw-bold text-primary fs-4" href="{% url 'blog:post_list' %}">
+                MyBlog
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="btn btn-outline-primary d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu">
+                ☰ Menu
+            </button>
+
+            <!-- Desktop Menu -->
+            <div class="collapse navbar-collapse d-none d-lg-block">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="{% url 'blog:post_list' %}">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </nav>
 
-    <main class="py-4">
-        {% block content %}
-        {% endblock %}
-    </main>
+    <!-- MOBILE OFFCANVAS -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title fw-bold">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
 
-    <footer class="bg-light text-center py-3 mt-5">
-        <p class="mb-0">&copy; {{ now|date:"Y" }} My Blog</p>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav">
+                <li class="nav-item my-2">
+                    <a class="nav-link" href="{% url 'blog:post_list' %}">Home</a>
+                </li>
+                <li class="nav-item my-2">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item my-2">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container main-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-5 bg-light border-top">
+        <div class="container py-4 text-center">
+            <p class="text-muted mb-1">
+                © {% now "Y" %} MyBlog — All Rights Reserved
+            </p>
+            <p class="text-primary fw-bold">
+                Built with Django & Bootstrap ❤️
+            </p>
+        </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

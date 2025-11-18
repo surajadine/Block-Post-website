@@ -1,9 +1,12 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from .models import Post
-from .forms import EmailPostForm
+from .forms import EmailPostForm, CommentForm
+from django.views.decorators.http import require_POST
+from django.contrib import messages
+
 
 
 
@@ -34,7 +37,9 @@ def post_details(request,year,month,day,slug):
                              publish__month = month,
                              publish__day = day,
                              slug = slug)
-    return render(request,'blog/post/detail.html',{'post':post})
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
+    return render(request,'blog/post/detail.html',{'post':post,'comments':comments,'form':form})
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -53,3 +58,32 @@ def post_share(request, post_id):
     else:
         form = EmailPostForm()
     return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
+
+
+def post_comment(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+
+            messages.success(request, "Your comment has been added!")
+
+            return redirect(
+                'blog:post_detail',
+                year=post.publish.year,
+                month=post.publish.month,
+                day=post.publish.day,
+                slug=post.slug
+            )
+
+    return redirect(
+        'blog:post_detail',
+        year=post.publish.year,
+        month=post.publish.month,
+        day=post.publish.day,
+        slug=post.slug
+    )

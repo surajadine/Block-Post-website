@@ -3,34 +3,110 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+
 <div class="container py-4">
 
-    <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary mb-3">
+    <!-- Success Messages -->
+    {% if messages %}
+    <div class="mt-3">
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm fw-semibold" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary mb-4">
         ← Back to Posts
     </a>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h1 class="card-title">{{ post.title }}</h1>
+    <!-- Post Card -->
+    <div class="card shadow-lg border-0 mb-5 rounded-4">
+        <div class="card-body p-4">
+            <h1 class="card-title mb-3">{{ post.title }}</h1>
 
-            <p class="text-muted mb-4">
+            <p class="text-muted">
                 <small>
-                    Published {{ post.publish|date:"M d, Y" }}
-                    by {{ post.author }}
+                    Published {{ post.publish|date:"M d, Y" }} •
+                    By <strong>{{ post.author }}</strong>
                 </small>
             </p>
 
-            <div class="content">
+            <hr>
+
+            <div class="content fs-5 mt-4 lh-lg">
                 {{ post.desc|linebreaks }}
             </div>
         </div>
     </div>
-</div>
 
-<div class=" container text-center">
-    <a href="{% url 'blog:post_share' post.id %}" class="btn btn-outline-danger mb-3">
-        share message
-    </a>
+    <!-- Share Button -->
+    <div class="text-center mb-5">
+        <a href="{% url 'blog:post_share' post.id %}" class="btn btn-outline-danger px-4 rounded-pill">
+            <i class="bi bi-send"></i> Share Post
+        </a>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card shadow-sm border-0 rounded-4 mb-5">
+        <div class="card-body p-4">
+
+            <h3 class="mb-4 fw-bold">
+                {{ comments.count }} Comment{{ comments.count|pluralize }}
+            </h3>
+
+            <!-- Comment List -->
+            {% for comment in comments %}
+            <div class="d-flex mb-4 p-3 border rounded bg-light comment-card">
+                <div class="me-3">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow"
+                        style="width: 50px; height: 50px; font-size: 1.2rem; font-weight: 600;">
+                        {{ comment.name|slice:":1" | upper }}
+                    </div>
+                </div>
+                <div>
+                    <h6 class="mb-1 fw-semibold">{{ comment.name }}</h6>
+                    <p class="mb-0 text-muted small">
+                        {{ comment.created|date:"M d, Y • H:i" }}
+                    </p>
+                    <p class="mt-2">{{ comment.body }}</p>
+                </div>
+            </div>
+
+            {% empty %}
+            <p class="text-muted fst-italic">No comments yet. Be the first to comment!</p>
+            {% endfor %}
+
+            <hr>
+
+            <!-- Comment Form -->
+            <h4 class="mt-4 mb-3 fw-bold">Leave a Comment</h4>
+
+            <form action="{% url 'blog:post_comment' post.slug %}" method="post" class="mt-3">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ field.label }}</label>
+                    {{ field }}
+
+                    {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                    Post Comment
+                </button>
+            </form>
+
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

@@ -48,6 +48,8 @@
             <h2 class="mb-2">Similar Posts</h2>
             {% for post in similar_posts%}
             <a href="{{post.get_absolute_url}}">{{post.title}} - {{post.same_tags}}</a>
+            {% empty %}
+            <p>No data similar_post</p>
             {% endfor %}
         </div>
     </div>

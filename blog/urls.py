@@ -14,4 +14,6 @@ urlpatterns = [
     path('<slug:slug>/comment/', views.post_comment, name='post_comment'),
     path('sitemap.xml', sitemap, {'sitemaps': {'article' : ArticleSitemap}},
      name='django.contrib.sitemaps.views.sitemap'),
+    path('search/', views.post_search, name='post_search'),
+
 ]

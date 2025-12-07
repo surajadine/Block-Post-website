@@ -5,8 +5,12 @@
 {% block content %}
 <div class="container py-4">
     <h1 class="mb-5 text-center">Latest Posts</h1>
-    <p class="mb-2"> This is my blog. I've written {% totalPost %} posts so far.</p>
-    <p>latest past{% show_latest_posts 2 %}</p>
+    <div class="text-center mb-5">
+        <form action="{% url 'blog:post_search' %}" method="get" class="d-inline-flex">
+            <input type="text" name="query" class="form-control me-2" placeholder="Search posts...">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
 
     <div class="row">
         {% for post in posts %}

@@ -19,3 +19,6 @@ class CommentForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
         
+class SearchForm(forms.Form):
+    query = forms.CharField()
+    
